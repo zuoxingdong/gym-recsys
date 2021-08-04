@@ -1,0 +1,27 @@
+# Caches from Python: Byte-compiled, DLL files
+*.pyc
+*.py~
+*$py.class
+.cache
+__pycache__/
+.pytest_cache
+
+# Distribution and packaging: setuptools
+/dist
+/build
+/eggs
+.eggs/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Read the Docs
+/docs/build/
+
+# Misc
+mjkey.txt  # MuJoCo License
+.DS_Store  # Mac
+
