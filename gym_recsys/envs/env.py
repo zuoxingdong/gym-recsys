@@ -106,12 +106,7 @@ class Env(gym.Env):
         })
 
         obs = self._get_obs()
-        # Alternative: 
         reward = action_item_reward[idx]
-        # if not is_click:
-        #     reward = action_item_reward.min() - 1.*action_item_reward.std()
-        if reward <= action_item_reward[-1]:
-            reward = 0.
         done = False
         info = {
             'is_click': is_click,
