@@ -134,7 +134,7 @@ Given the sampled embeddings, let's say item 1 and 3 lead to maximally possible 
 | :---: | :---: | :---: |
 | `greedy` | 180.86 | 97.93% |
 
-Last but not least, for the most fun part, let us generate animations of both policy for an episode via gym's `Monitor` wrapper, showing as GIFs in the following:
+Last but not least, for the most fun part, let us generate animations of both policy for an episode via gym's `RecordVideo` wrapper, showing as GIFs in the following:
 
 #### Random Agent
 
