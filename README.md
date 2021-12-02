@@ -33,23 +33,7 @@ An example of three users: `user_ids = [0, 1, 2]`
 
 Note that the user ID will be taken as an input to `user_state_model_callback` to generate observations of the user state. 
 
-#### `item_category`
-
-This describes the categories of a list of available items. The data type should be a list of strings. The indices of the list is assumed to correspond to item IDs. 
-
-An example of three items: `item_category = ['sci-fi', 'romance', 'sci-fi']`
-
-The category information is mainly used for visualization via `env.render()`.
-
-#### `item_popularity`
-
-This describe the popularity measure of a list of available items. The data type should be a list (or 1-dim array) of integers. The indices of the list is assumed to correspond to item IDs. 
-
-An example of three items: `item_popularity = [5, 3, 1]`
-
-The popularity information is used for calculating Expected Popularity Complement (EPC) in the visualization. 
-
-#### `hist_seq_len`
+#### `hist_len`
 
 This is an integer describing the number of most recently clicked items by the user to encode as the current state of the user. 
 
@@ -63,13 +47,13 @@ This is an integer describing the size of the slate (display list of recommended
 
 It induces a combinatorial action space for the RL agent.
 
-#### `user_state_model_callback`
+#### `user_state_callback`
 
 This is a Python callback function taking `user_id` and `hist_seq` as inputs to generate an observation of current user state. 
 
 Note that it is generic. Either pre-defined heuristic computations or pre-trained neural network models using user/item embeddings can be wrapped as a callback function. 
 
-#### `reward_model_callback`
+#### `reward_callback`
 
 This is a Python callback function taking `user_id`, `hist_seq` and `action` as inputs to generate a reward value for each item in the slate. (i.e. `action`)
 
@@ -82,25 +66,18 @@ To illustrate the simple yet flexible design of `gym-recsys`, we provide a toy e
 First, let us sample random embeddings for one user and five items:
 
 ```python
-user_features = np.random.randn(1, 10)
-item_features = np.random.randn(5, 10)
-```
-
-Now let us define the category and popularity score for each item:
-
-```python
-item_category = ['sci-fi', 'romance', 'sci-fi', 'action', 'sci-fi']
-item_popularity = [5, 3, 1, 2, 3]
+user_embeds = np.random.randn(1, 10)
+item_embeds = np.random.randn(5, 10)
 ```
 
 Then, we define callback functions for user state and reward values:
 
 ```python
-def user_state_model_callback(user_id, hist_seq):
-    return user_features[user_id]
+def user_state_callback(user_id, hist_seq):
+    return user_embeds[user_id]
 
-def reward_model_callback(user_id, hist_seq, action):
-    return np.inner(user_features[user_id], item_features[action])
+def reward_callback(user_id, hist_seq, action):
+    return np.inner(user_embeds[user_id], item_embeds[action])
 ```
 
 Finally, we are ready to create a simulation environment with OpenAI Gym API:
@@ -108,12 +85,10 @@ Finally, we are ready to create a simulation environment with OpenAI Gym API:
 ```python
 env_kws = dict(
     user_ids=[0],
-    item_category=item_category,
-    item_popularity=item_popularity,
-    hist_seq_len=3,
+    hist_len=3,
     slate_size=2,
-    user_state_model_callback=user_state_model_callback,
-    reward_model_callback=reward_model_callback
+    user_state_callback=user_state_callback,
+    reward_callback=reward_callback
 )
 env = gym.make('gym_recsys:RecSys-t50-v0', **env_kws)
 ```

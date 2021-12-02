@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='gym_recsys',
     author='Xingdong Zuo',
-    version='0.0.3',
+    version='0.0.4',
     keywords='recsys, rl, reinforcement-learning, openai-gym, gym, python',
     url='https://github.com/zuoxingdong/gym-recsys',
     description='Customizable RecSys Simulator for OpenAI Gym',
