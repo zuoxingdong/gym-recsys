@@ -16,8 +16,8 @@ class SkipPenaltyReward(Wrapper):
     def step(self, action):
         observation, reward, done, info = self.env.step(action)
         if not info['is_click']:
-            action_item_reward = np.asarray(info['action_item_reward'])
-            reward = action_item_reward.min() - 1.*action_item_reward.std()
+            rewards = np.asarray(info['rewards'])
+            reward = rewards.min() - 1.*rewards.std()
         return observation, reward, done, info
 
 
@@ -25,13 +25,13 @@ class PreferenceRewardStochastic(Wrapper):
     def step(self, action):
         observation, _, done, info = self.env.step(action)
         
-        action_item_reward = np.asarray(info['action_item_reward'])
-        skip_reward = action_item_reward[-1]
-        action_item_reward -= skip_reward
-        action_item_reward = np.maximum(0, action_item_reward)
+        rewards = np.asarray(info['rewards'])
+        skip_reward = rewards[-1]
+        rewards -= skip_reward
+        rewards = np.maximum(0, rewards)
 
         idx = info['clicked_item_idx']
-        reward = action_item_reward[idx]
+        reward = rewards[idx]
         return observation, reward, done, info
 
 
@@ -39,10 +39,10 @@ class PreferenceRewardDeterministic(Wrapper):
     def step(self, action):
         observation, _, done, info = self.env.step(action)
         
-        action_item_reward = np.asarray(info['action_item_reward'])
-        skip_reward = action_item_reward[-1]
-        action_item_reward -= skip_reward
-        action_item_reward = np.maximum(0, action_item_reward)
+        rewards = np.asarray(info['rewards'])
+        skip_reward = rewards[-1]
+        rewards -= skip_reward
+        rewards = np.maximum(0, rewards)
 
-        reward = action_item_reward.max()
+        reward = rewards.max()
         return observation, reward, done, info
